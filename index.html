@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" href="./static/css/bootstrap.css"> -->
+  <link rel="stylesheet" href="./static/css/style.css">
+  <title>Форма обратной связи</title>
+</head>
+
+<body>
+  <div class="alert alert-success alert-custom d-none">Обращение отправлено успешно</div>
+  <div class="container container-custom">
+    <h1 class="display-4 display-custom">Обратная связь</h1>
+    <p class="lead lead-custom">Задайте ваш вопрос и наши специалисты ответят вам в ближайшее время</p>
+    <form class="form" id="feedback" autocomplete="off" enctype="multipart/form-data">
+      <div>
+        <div class="form-group form-custom">
+          <label for="inputName" class="label-custom">Имя</label>
+          <input type="text" class="form-control" id="inputName" name="name" aria-describedby="nameHelp">
+          <div class="invalid-feedback">Укажите имя</div>
+        </div>
+        <div class="form-group form-custom">
+          <label for="inputEmail" class="label-custom" >Эл.почта</label>
+          <input type="text" class="form-control" id="inputEmail" name="email" aria-describedby="emailHelp">
+          <div class="invalid-feedback">Некорректный email</div>
+        </div>
+        <div class="form-group form-custom">
+          <label for="inputAccount" class="label-custom">Лицевой счет</label>
+          <input type="text" class="form-control" id="inputAccount" name="personalAccount">
+          <div class="invalid-feedback">Некорректный лицевой счёт</div>
+        </div>
+        <div class="form-group form-custom">
+          <label for="select" class="label-custom">Выберите тему</label>
+          <select class="form-control custom-select" name="theme" id="select">
+            <option style="display: none;"></option>
+            <option>Тема 1</option>
+            <option>Тема 2</option>
+            <option>Тема 3</option>
+            <option>Тема 4</option>
+            <option>Тема 5</option>
+            <option>Тема 6</option>
+          </select>
+          <div class="invalid-feedback"></div>
+        </div>
+        <div class="form-group form-custom">
+          <label for="message" class="label-custom">Сообщение</label>
+          <textarea class="form-control" id="message" rows="3" cols="3" name="message"></textarea>
+          <div class="invalid-feedback">Сообщение не может быть пустым</div>
+        </div>
+      </div>
+      <div class="custom-file">
+          <input type="file" class="custom-file-input" id="customFile" accept=".jpg, .jpeg, .png, .pdf, .doc*, xls*, .txt" multiple>
+          <label class="custom-file-label label-custom-file" for="customFile">Загрузить файл</label>
+        </div>
+        
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" class="form-check-input">
+          Согласен на обработку персональных данных
+        </label>
+      </div>
+      <div class=" d-flex justify-content-center">
+        <input disabled class="btn btn-primary btn-secondary btn-lg btn-custom" type="submit" value="Отправить">
+      </div>
+    </form>
+  </div>
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="./static/js/constants.js"></script>
+<script src="./static/js/script.js"></script>
+
+</html>
