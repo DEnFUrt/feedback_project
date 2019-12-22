@@ -9,17 +9,7 @@
   // Enable BtnSubmit
 
   container.addEventListener('input', () => {
-    let flagSuccess = true;
-    let arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    let FormControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
-
-    if (!checkBox.checked ||
-      FormControlsValues.length !== formControls.length ||
-      arrDivInvalidFeedbackVisible.length !== 0) {
-      flagSuccess = false;
-    }
-
-    if (flagSuccess) {
+    if (controlSuccess()) {
       setOffArrt(btnSubmit, btnSubmitAttr);
       setOffClass(btnSubmit, btnSubmitClass);
     } else {
@@ -31,6 +21,8 @@
   btnSubmit.addEventListener('click', (e) => {
     
     // вставить код отправки формы
+
+    //заглушка, перегружает форму 
     event.preventDefault();
     setOffClass(alertSuccess, alertSuccessUnvisible);
     form.reset();
@@ -142,6 +134,19 @@
       elementTarget.nextElementSibling.textContent = 'Файл не выбран';
     } else {
       elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({name}) => name);
+    }
+  }
+
+  function controlSuccess () {
+    let arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
+    let FormControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
+
+    if (!checkBox.checked ||
+      FormControlsValues.length !== formControls.length ||
+      arrDivInvalidFeedbackVisible.length !== 0) {
+      return false;
+    } else {
+      return true;
     }
   }
 
