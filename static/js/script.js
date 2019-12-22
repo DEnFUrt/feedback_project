@@ -139,10 +139,10 @@
 
   function controlSuccess () {
     let arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    let FormControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
+    let formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
 
     if (!checkBox.checked ||
-      FormControlsValues.length !== formControls.length ||
+      formControlsValues.length !== formControls.length ||
       arrDivInvalidFeedbackVisible.length !== 0) {
       return false;
     } else {
