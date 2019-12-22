@@ -15,5 +15,5 @@ const btnSubmitAttr = 'disabled';
 const btnSubmitClass = 'btn-secondary';
 
 const regexAccount = /^\d{5,}$/;
-const regexEmail = /^(\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/;
+const regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/;
 const regexInput = /[А-Яа-я\w]/;
