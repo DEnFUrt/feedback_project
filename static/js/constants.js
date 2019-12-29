@@ -1,19 +1,19 @@
 //DOM
-const container = document.querySelector('.container');
-const checkBox = document.querySelector('input[type="checkbox"]')
-const alertSuccess = document.querySelector('.alert');
-const formControls = document.querySelectorAll('.form-control');
-const btnSubmit = document.querySelector('input[type="submit"]');
-const btnFile = document.querySelector('input[type="file"]');
-const form = document.querySelector('.form');
+const container = document.querySelector('.container'),
+  checkBox = document.querySelector('input[type="checkbox"]'),
+  alertSuccess = document.querySelector('.alert'),
+  formControls = document.querySelectorAll('.form-control'),
+  btnSubmit = document.querySelector('input[type="submit"]'),
+  btnFile = document.querySelector('input[type="file"]'),
+  form = document.querySelector('.form');
 
 //PARAMETERS
-const invalidFeedbackVisible = 'd-block';
-const alertSuccessUnvisible = 'd-none';
-const labelUp = 'label-custom-up';
-const btnSubmitAttr = 'disabled';
-const btnSubmitClass = 'btn-secondary';
+const invalidFeedbackVisible = 'd-block',
+  alertSuccessUnvisible = 'd-none',
+  labelUp = 'label-custom-up',
+  btnSubmitAttr = 'disabled',
+  btnSubmitClass = 'btn-secondary';
 
-const regexAccount = /^\d{5,}$/;
-const regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/;
-const regexInput = /[А-Яа-я\w]/;
+const regexAccount = /^\d{5,}$/,
+  regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/,
+  regexInput = /[А-Яа-я\w]/;
