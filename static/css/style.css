@@ -67,6 +67,11 @@ li {
   padding-top: 2px;
 }
 
-.alert-custom{
+.alert-custom {
+  margin: auto;
   text-align: center;
+}
+
+.alert-custom>button {
+  outline: none;
 }

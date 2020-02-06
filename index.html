@@ -13,7 +13,40 @@
 </head>
 
 <body>
-  <div class="alert alert-success alert-custom d-none">Обращение отправлено успешно</div>
+  <!-- Spinner -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div id="alert-spinner" class="alert alert-warning col-lg-8 col-md-10 col-sm-12 d-none">
+        <div class="d-flex align-items-center">
+          <strong>Отправляем сообщение...</strong>
+          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Alert message -->
+  <div class="container">
+    <div class="row justify-content-center alert-block">
+      <!-- Alert error -->
+      <div id="alert-danger"
+        class="col-lg-8 col-md-10 col-sm-12 alert alert-danger alert-dismissible d-none alert-custom" role="alert">
+        <span class="alert-danger-span">Сообщение не отправлено. Попробуйте отправить сообщение ещё раз через некоторое
+          время.</span>
+        <button type="button" class="close" aria-label="Close">
+          <span class="alert-close" data-alert="alert-danger" aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!-- Alert succes -->
+      <div id="alert-success"
+        class="col-lg-8 col-md-10 col-sm-12 alert alert-success alert-dismissible d-none alert-custom" role="alert">
+        Сообщение отправлено успешно!
+        <button type="button" class="close" aria-label="Close">
+          <span class="alert-close" data-alert="alert-success" aria-hidden="true">×</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="container container-custom">
     <h1 class="display-4 display-custom">Обратная связь</h1>
     <p class="lead lead-custom">Задайте ваш вопрос и наши специалисты ответят вам в ближайшее время</p>
@@ -25,14 +58,14 @@
           <div class="invalid-feedback">Укажите имя</div>
         </div>
         <div class="form-group form-custom">
-          <label for="inputEmail" class="label-custom" >Эл.почта</label>
+          <label for="inputEmail" class="label-custom">Эл.почта (adress@email.domain)</label>
           <input type="text" class="form-control" id="inputEmail" name="email" aria-describedby="emailHelp">
           <div class="invalid-feedback">Некорректный email</div>
         </div>
         <div class="form-group form-custom">
-          <label for="inputAccount" class="label-custom">Лицевой счет</label>
-          <input type="text" class="form-control" id="inputAccount" name="personalAccount">
-          <div class="invalid-feedback">Некорректный лицевой счёт</div>
+          <label for="inputPhone" class="label-custom">Телефон (8хххххххххх)</label>
+          <input type="text" class="form-control" id="inputPhone" name="personalPhone">
+          <div class="invalid-feedback">Некорректный номер телефона</div>
         </div>
         <div class="form-group form-custom">
           <label for="select" class="label-custom">Выберите тему</label>
@@ -54,10 +87,11 @@
         </div>
       </div>
       <div class="custom-file">
-          <input type="file" class="custom-file-input" id="customFile" accept=".jpg, .jpeg, .png, .pdf, .doc*, xls*, .txt" multiple>
-          <label class="custom-file-label label-custom-file" for="customFile">Загрузить файл</label>
-        </div>
-        
+        <input type="file" class="custom-file-input" id="customFile" name="file" accept=".jpg, .jpeg, .png, .pdf, .doc*, xls*, .txt"
+          multiple>
+        <label class="custom-file-label label-custom-file" for="customFile">Загрузить файл</label>
+      </div>
+
       <div class="form-check">
         <label class="form-check-label">
           <input type="checkbox" class="form-check-input">
@@ -72,6 +106,7 @@
 </body>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
   integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="./static/js/jquery.js"></script>
 <script src="./static/js/constants.js"></script>
 <script src="./static/js/script.js"></script>
 

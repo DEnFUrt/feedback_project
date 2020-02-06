@@ -8,7 +8,7 @@
 
   // Enable BtnSubmit
 
-  container.addEventListener('input', () => {
+  form.addEventListener('input', () => {
     if (controlSuccess()) {
       setOffArrt(btnSubmit, btnSubmitAttr);
       setOffClass(btnSubmit, btnSubmitClass);
@@ -19,27 +19,50 @@
   });
 
   btnSubmit.addEventListener('click', (e) => {
-    
-    // вставить код отправки формы
-
-    //заглушка, перегружает форму 
     event.preventDefault();
-    setOffClass(alertSuccess, alertSuccessUnvisible);
-    form.reset();
     
-    for(let formControl of formControls) {
-      setOffClass(formControl.previousElementSibling, labelUp);
-    }
-    setOnAttr(e.currentTarget, btnSubmitAttr);
-    setOnClass(e.currentTarget, btnSubmitClass);
-    labelBtnText(btnFile, true);
+    let form_data = $(form).serialize();
+    $.ajax({
+      type: "POST",
+      url: "send.php",
+      data: form_data,
+      beforeSend: function() {
+        setOnClass(alertSpinner, alertUp);
+      },
+      complete: function() {
+        setOffClass(alertSpinner, alertUp);
+      },
+      success: function () {
+        setOnClass(alertSuccess, alertUp);
+        offAlert(alertSuccess);
+        formReset();
+      },
+      error: function(data) {
+        if (data.responseText !== '') {
+          const alertDangerSpan = alertDanger.querySelector('.alert-danger-span');
+          alertDangerSpan.textContent = data.responseText;
+        }
+        setOnClass(alertDanger, alertUp);
+        offAlert(alertDanger);
+      }
+    });
   });
 
   btnFile.addEventListener('change', (e) => {
     labelBtnText(e.currentTarget);
   });
 
+  btnCloseAlert.addEventListener('click', handlerAlert);
+
   // function 
+
+  function handlerAlert(e) {
+    const target = e.target;
+    if (target.classList.contains('alert-close')) {
+      const targetAlert = e.currentTarget.querySelector(`#${target.dataset.alert}`);
+      setOffClass(targetAlert, alertUp);
+    }
+  }
 
   function focusBind(formControl) {
     formControl.addEventListener('focus', (e) => {
@@ -65,8 +88,8 @@
         regexTemp = regexEmail;
         break;
 
-      case 'personalAccount':
-        regexTemp = regexAccount;
+      case 'personalPhone':
+        regexTemp = regexPhone;
         break;
 
       default:
@@ -138,8 +161,8 @@
   }
 
   function controlSuccess () {
-    let arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    let formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
+    const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
+    const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
 
     if (!checkBox.checked ||
       formControlsValues.length !== formControls.length ||
@@ -149,5 +172,22 @@
       return true;
     }
   }
+
+  function formReset() {
+    //возвращаем Label на место
+    form.reset();
+    for(let formControl of formControls) {
+      setOffClass(formControl.previousElementSibling, labelUp);
+    }
+    setOnAttr(e.currentTarget, btnSubmitAttr);
+    setOnClass(e.currentTarget, btnSubmitClass);
+    labelBtnText(btnFile, true);
+  }
+
+  function offAlert(targetAlert) {
+    setTimeout(() => {
+      setOffClass(targetAlert, alertUp);
+    }, 10000);
+  } 
 
 })();
