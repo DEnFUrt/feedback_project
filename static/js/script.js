@@ -1,9 +1,9 @@
 (function () {
 
   for (let formControl of formControls) {
-        focusBind(formControl);
-        blurBind(formControl);
-        inputBind(formControl);
+    focusBind(formControl);
+    blurBind(formControl);
+    inputBind(formControl);
   }
 
   // Enable BtnSubmit
@@ -19,25 +19,35 @@
   });
 
   btnSubmit.addEventListener('click', (e) => {
-    event.preventDefault();
-    
-    let form_data = $(form).serialize();
+    const currentTarget = e.currentTarget;
+    e.preventDefault();
+
+    let form_data = new FormData(form);
+    if (btnFile.files.length > 0) {
+      form_data.append('userfile', btnFile.files);
+    }
+
     $.ajax({
       type: "POST",
-      url: "send.php",
+      //
+      processData: false,
+      //contentType: 'json',
+      contentType: false,
+      //
+      url: 'send.php',
       data: form_data,
-      beforeSend: function() {
+      beforeSend: function () {
         setOnClass(alertSpinner, alertUp);
       },
-      complete: function() {
+      complete: function () {
         setOffClass(alertSpinner, alertUp);
       },
       success: function () {
         setOnClass(alertSuccess, alertUp);
         offAlert(alertSuccess);
-        formReset();
+        formReset(currentTarget);
       },
-      error: function(data) {
+      error: function (data) {
         if (data.responseText !== '') {
           const alertDangerSpan = alertDanger.querySelector('.alert-danger-span');
           alertDangerSpan.textContent = data.responseText;
@@ -49,6 +59,9 @@
   });
 
   btnFile.addEventListener('change', (e) => {
+    if (btnFile.files.length !== 0) {
+
+    }
     labelBtnText(e.currentTarget);
   });
 
@@ -82,7 +95,7 @@
 
   function inputBind(formControl) {
     let regexTemp;
-    
+
     switch (formControl.name) {
       case 'email':
         regexTemp = regexEmail;
@@ -156,13 +169,17 @@
     if (elementTarget.files.length === 0) {
       elementTarget.nextElementSibling.textContent = 'Файл не выбран';
     } else {
-      elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({name}) => name);
+      elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({
+        name
+      }) => name);
     }
   }
 
-  function controlSuccess () {
+  function controlSuccess() {
     const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
+    const formControlsValues = Array.from(formControls, ({
+      value
+    }) => value).filter(Boolean);
 
     if (!checkBox.checked ||
       formControlsValues.length !== formControls.length ||
@@ -173,14 +190,14 @@
     }
   }
 
-  function formReset() {
+  function formReset(currentTarget) {
     //возвращаем Label на место
     form.reset();
-    for(let formControl of formControls) {
+    for (let formControl of formControls) {
       setOffClass(formControl.previousElementSibling, labelUp);
     }
-    setOnAttr(e.currentTarget, btnSubmitAttr);
-    setOnClass(e.currentTarget, btnSubmitClass);
+    setOnAttr(currentTarget, btnSubmitAttr);
+    setOnClass(currentTarget, btnSubmitClass);
     labelBtnText(btnFile, true);
   }
 
@@ -188,6 +205,6 @@
     setTimeout(() => {
       setOffClass(targetAlert, alertUp);
     }, 10000);
-  } 
+  }
 
 })();

@@ -1,9 +1,9 @@
 //DOM
 // const container = document.querySelector('.container'),
-  const checkBox = document.querySelector('input[type="checkbox"]'),
+const checkBox = document.querySelector('input[type="checkbox"]'),
   formControls = document.querySelectorAll('.form-control'),
   btnSubmit = document.querySelector('input[type="submit"]'),
-  btnFile = document.querySelector('input[type="file"]'),
+  btnFile = document.getElementById('customFile'),
   form = document.querySelector('.form'),
   alertSuccess = document.getElementById('alert-success'),
   alertDanger = document.getElementById('alert-danger'),
@@ -14,7 +14,7 @@
 const invalidFeedbackVisible = 'd-block',
   labelUp = 'label-custom-up',
   alertUp = 'd-block';
-  btnSubmitAttr = 'disabled',
+btnSubmitAttr = 'disabled',
   btnSubmitClass = 'btn-secondary';
 
 const regexPhone = /^[0-9]{5,11}$/,
