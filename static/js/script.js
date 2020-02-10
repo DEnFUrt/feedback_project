@@ -50,7 +50,7 @@
       error: function (data) {
         if (data.responseText !== '') {
           const alertDangerSpan = alertDanger.querySelector('.alert-danger-span');
-          alertDangerSpan.textContent = data.responseText;
+          alertDangerSpan.innerHTML = data.responseText;
         }
         setOnClass(alertDanger, alertUp);
         offAlert(alertDanger);

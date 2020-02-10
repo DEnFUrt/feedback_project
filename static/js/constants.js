@@ -17,6 +17,6 @@ const invalidFeedbackVisible = 'd-block',
 btnSubmitAttr = 'disabled',
   btnSubmitClass = 'btn-secondary';
 
-const regexPhone = /^[0-9]{5,11}$/,
+const regexPhone = /^[8|7]{1}[0-9]{10}$/,
   regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/,
   regexInput = /[А-Яа-я\w]/;
