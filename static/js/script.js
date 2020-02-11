@@ -67,8 +67,23 @@
 
   btnCloseAlert.addEventListener('click', handlerAlert);
 
+  captcha.addEventListener('click', (e) => {
+    e.preventDefault;
+    refreshCaptcha();
+  });
+  
   // function 
 
+  // обновление капчи
+  function refreshCaptcha() {
+    const captchaImg = form.querySelector('.img-captcha'),
+      captchaSrc = captchaImg.dataset.src,
+      captchaPrefix = captchaSrc.indexOf('?id') !== -1 ? '&rnd=' : '?rnd=',
+      captchaNewSrc = captchaSrc + captchaPrefix + (new Date()).getTime();
+      captchaImg.setAttribute('src', captchaNewSrc);
+  }
+
+  //Закрытие алерта при нажатии на крестик
   function handlerAlert(e) {
     const target = e.target;
     if (target.classList.contains('alert-close')) {
@@ -77,6 +92,7 @@
     }
   }
 
+  //Поднимает label при появлении фокуса на поле ввода
   function focusBind(formControl) {
     formControl.addEventListener('focus', (e) => {
       if (checkValue(e.currentTarget.value)) {
@@ -85,6 +101,7 @@
     });
   }
 
+  //Опускаем label на место при потере фокуса на поле ввода если поле ввода осталось пустым
   function blurBind(formControl) {
     formControl.addEventListener('blur', (e) => {
       if (checkValue(e.currentTarget.value)) {
@@ -93,6 +110,7 @@
     });
   }
 
+  //Проверяем вводимые данные по маске и если ошибка ввода проявляем div с сообщение об ошибке
   function inputBind(formControl) {
     let regexTemp;
 
@@ -199,6 +217,7 @@
     setOnAttr(currentTarget, btnSubmitAttr);
     setOnClass(currentTarget, btnSubmitClass);
     labelBtnText(btnFile, true);
+    refreshCaptcha();
   }
 
   function offAlert(targetAlert) {

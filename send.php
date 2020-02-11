@@ -49,6 +49,8 @@ $textLength = iconv_strlen($text, 'UTF-8');
 
 $mail = new PHPMailer\PHPMailer\PHPMailer();
 
+session_start();
+
 //Валидация данных формы
 
 $validate = 'success'; //создаем переменную флаг, результата валидации
@@ -64,7 +66,7 @@ if (!trim($name) or $nameLength > 30) {
 if (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
     $validate = 'error';
     $resultMessage .= "Не пройдена проверка поля: email! Поле должно быть не пустым и корректным. <br>";
-}  
+}
 
 //Проверяем поле phone, оно должно быть не пустым и и состоять из 5-11 символов
 if (!trim($phone) or !preg_match('/^(8|7)(\d{10})$/', $phone)) {
@@ -84,38 +86,55 @@ if (!trim($text) or $textLength > 500) {
     $resultMessage .= "Не пройдена проверка поля: Сообщение! Поле должно быть не пустым и не больше 500 символов. <br>";
 }
 
-//Проверяем прикрепленные файлы
-if (!empty($_FILES['userfile']['name'][0]) &&
-    count($_FILES['userfile']['name']) <= MAX_FILE_COUNT) {
-    foreach ($_FILES['userfile']['error'] as $key => $error) {
-        if ($error == UPLOAD_ERR_OK) {
-            // получаем имя файла
-            $fileName = $_FILES['userfile']['name'][$key];
-            // получаем расширение файла в нижнем регистре
-            $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-            // получаем размер файла
-            $fileSize = $_FILES['userfile']['size'][$key];
-            //проверяем расширения файла
-            if (!in_array($fileExt, ALLOWED_EXTENSIONS)) {
-                $validate = 'error';
-                $resultMessage .= "Произошла ошибка! Файл '. $fileName .' имеет не разрешённый тип! <br>";
-            }
-            //Проверяем размер файла
-            if ($fileSize > MAX_FILE_SIZE) {
-                $validate = 'error';
-                $resultMessage .= "Произошла ошибка! Размер файла '. $fileName .' превышает ". MAX_FILE_SIZE / (1024 * 1024) ." Мб! <br>";
-            }
-            //Создаем массив имени и временного имени загружаемых файлов
-            $out_files[] = array("name" => $_FILES['userfile']['name'][$key], "tmp_name" => $_FILES['userfile']['tmp_name'][$key]);
-        } else {
-            $validate = 'error';
-            $resultMessage .= "Произошла ошибка при загрузке файла на сервер! <br>";
-        }
+//Проверка капчи
+if (isset($_POST['captcha']) && isset($_SESSION['captcha'])) {
+    $captcha = filter_var($_POST['captcha'], FILTER_SANITIZE_STRING); // защита от XSS
+    if ($_SESSION['captcha'] != $captcha) { // проверка капчи
+        $validate = 'error';
+        $resultMessage .= "Не пройдена проверка поля: captcha! Указанный код $captcha не соответствует сгенерированному на сервере <br>";
     }
 } else {
     $validate = 'error';
-    $resultMessage .= "Произошла ошибка! Количество файлов не может быть больше - " . MAX_FILE_COUNT . "! <br>";
+    $resultMessage .= "Произошла ошибка при проверке капчи! <br>";
 }
+
+//Проверяем прикрепленные файлы
+if (!empty($_FILES['userfile']['name'][0])) {
+
+    if (count($_FILES['userfile']['name']) <= MAX_FILE_COUNT) {
+
+        foreach ($_FILES['userfile']['error'] as $key => $error) {
+
+            if ($error == UPLOAD_ERR_OK) {
+                // получаем имя файла
+                $fileName = $_FILES['userfile']['name'][$key];
+                // получаем расширение файла в нижнем регистре
+                $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+                // получаем размер файла
+                $fileSize = $_FILES['userfile']['size'][$key];
+                //проверяем расширения файла
+                if (!in_array($fileExt, ALLOWED_EXTENSIONS)) {
+                    $validate = 'error';
+                    $resultMessage .= "Произошла ошибка! Файл $fileName имеет не разрешённый тип! <br>";
+                }
+                //Проверяем размер файла
+                if ($fileSize > MAX_FILE_SIZE) {
+                    $validate = 'error';
+                    $resultMessage .= "Произошла ошибка! Размер файла $fileName превышает " . MAX_FILE_SIZE / (1024 * 1024) . " Мб! <br>";
+                }
+                //Создаем массив имени и временного имени загружаемых файлов
+                $out_files[] = array("name" => $_FILES['userfile']['name'][$key], "tmp_name" => $_FILES['userfile']['tmp_name'][$key]);
+            } else {
+                $validate = 'error';
+                $resultMessage .= "Произошла ошибка при загрузке файла на сервер! <br>";
+            }
+        }
+    } else {
+        $validate = 'error';
+        $resultMessage .= "Произошла ошибка! Количество файлов не может быть больше - " . MAX_FILE_COUNT . "! <br>";
+    }
+}
+
 
 
 /* if (
@@ -198,11 +217,11 @@ try {
     // }
 
     //Прикрепляем файлы к письму
-    
+
     foreach ($out_files as $k => $v) {
         $mail->AddAttachment($out_files[$k]['tmp_name'], $out_files[$k]['name']);
     }
-    
+
     // -----------------------
     // Само письмо
     // -----------------------
@@ -229,14 +248,14 @@ try {
         $mail->IsHTML(false);
         $mail->Subject = MAIL_SUBJECT;
         $mail->Body    = "Добрый день, $name ! <br>
-        Вы оставили обращение на сайте <a href=\"$site\"><b>".MAIL_FROM_SITE."</b></a> <br>
+        Вы оставили обращение на сайте <a href=\"$site\"><b>" . MAIL_FROM_SITE . "</b></a> <br>
         Спасибо за проявленный интерес к нашему сайту.<br>
         В ближайшее время мы с Вами свяжемся по адресу электронной почты: <b>$email</b>,<br>
         или перезвоним по номеру телефона: <b>$phone</b> <br><br>
-        С уважением, ".MAIL_FROM_NAME;
+        С уважением, " . MAIL_FROM_NAME;
         $mail->IsHTML(true);
         $mail->AltBody = "Привет, $name !
-        Вы оставили сообщение на сайте ".MAIL_FROM_SITE."
+        Вы оставили сообщение на сайте " . MAIL_FROM_SITE . "
         Спасибо за проявленный интерес к нашему сайту.
         В ближайшее время мы с Вами свяжемся по адресу электронной почты: $email ,
         или по перезвоним по номеру телефона: $phone

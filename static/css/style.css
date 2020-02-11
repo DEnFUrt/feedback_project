@@ -5,13 +5,13 @@ body {
 
 ul,
 li {
-    display: block;
-    margin: 0;
-    padding: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
 }
 
 li {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 .container-custom {
@@ -22,7 +22,7 @@ li {
 .display-custom {
   font-size: 25px;
   margin-bottom: 2px;
-} 
+}
 
 .lead-custom {
   font-size: 18px;
@@ -43,7 +43,7 @@ li {
   cursor: text;
 }
 
-.label-custom-up{
+.label-custom-up {
   left: 5px;
   top: -12px;
   font-size: 13px;
@@ -55,11 +55,13 @@ li {
   user-select: none;
 }
 
-.label-custom-file{
+.label-custom-file {
   text-align: left;
+  font-size: 14px;
+  color: #9e9e9e;
 }
 
-.btn-custom{
+.btn-custom {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-left: 30px;
@@ -74,4 +76,26 @@ li {
 
 .alert-custom>button {
   outline: none;
+}
+
+.img-captcha {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.refresh-captcha {
+  padding-left: 2rem;
+}
+
+.refresh-captcha::before {
+  content: "";
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  left: .5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent no-repeat center center;
+  background-size: 100% 100%;
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512.333 512'%3E%3Cpath fill='%23000' d='M440.935 12.574l3.966 82.766C399.416 41.904 331.674 8 256 8 134.813 8 33.933 94.924 12.296 209.824 10.908 217.193 16.604 224 24.103 224h49.084c5.57 0 10.377-3.842 11.676-9.259C103.407 137.408 172.931 80 256 80c60.893 0 114.512 30.856 146.104 77.801l-101.53-4.865c-6.845-.328-12.574 5.133-12.574 11.986v47.411c0 6.627 5.373 12 12 12h200.333c6.627 0 12-5.373 12-12V12c0-6.627-5.373-12-12-12h-47.411c-6.853 0-12.315 5.729-11.987 12.574zM256 432c-60.895 0-114.517-30.858-146.109-77.805l101.868 4.871c6.845.327 12.573-5.134 12.573-11.986v-47.412c0-6.627-5.373-12-12-12H12c-6.627 0-12 5.373-12 12V500c0 6.627 5.373 12 12 12h47.385c6.863 0 12.328-5.745 11.985-12.599l-4.129-82.575C112.725 470.166 180.405 504 256 504c121.187 0 222.067-86.924 243.704-201.824 1.388-7.369-4.308-14.176-11.807-14.176h-49.084c-5.57 0-10.377 3.842-11.676 9.259C408.593 374.592 339.069 432 256 432z'/%3E%3C/svg%3E");
 }
