@@ -7,21 +7,27 @@ const checkBox = document.querySelector('input[type="checkbox"]'),
   form = document.querySelector('.form'),
   alertSuccess = document.getElementById('alert-success'),
   alertDanger = document.getElementById('alert-danger'),
+  alertDangerSpan = alertDanger.querySelector('.alert-danger-span'),
   alertSpinner = document.getElementById('alert-spinner'),
   btnCloseAlert = document.querySelector('.alert-block'),
-  captcha = form.querySelector('.refresh-captcha');
+  files = document.getElementById('files'),
+  captcha = form.querySelector('.refresh-captcha'),
+  templateFilesItem = form.querySelector('#template-files-item').content;
+  
+  
 
 //PARAMETERS
 const invalidFeedbackVisible = 'd-block',
   labelUp = 'label-custom-up',
   alertUp = 'd-block',
   btnSubmitAttr = 'disabled',
-  btnSubmitClass = 'btn-secondary';
+  btnSubmitClass = 'btn-secondary',
+  fileItemError = 'file-item-error';
 
 const regexPhone = /^[8|7]{1}[0-9]{10}$/,
   regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/,
   regexInput = /[А-Яа-я\w]/;
 
-const maxFileSize = 2, // максимальный размер файла (в Mb)
+const maxFileSize = 2097152, // максимальный размер файла (в байтах)
   maxFileCount = 5, //максимальное количество файлов
-  allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt']; // разрешённые расширения файлов
+  allowedExtensions = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'rtf']; // разрешённые расширения файлов

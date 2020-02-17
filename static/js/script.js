@@ -1,5 +1,7 @@
 (function () {
 
+  let listFiles = [];
+
   for (let formControl of formControls) {
     focusBind(formControl);
     blurBind(formControl);
@@ -7,7 +9,6 @@
   }
 
   // Enable BtnSubmit
-
   form.addEventListener('input', () => {
     if (controlSuccess()) {
       setOffArrt(btnSubmit, btnSubmitAttr);
@@ -18,22 +19,26 @@
     }
   });
 
+  //Отправка формы
   btnSubmit.addEventListener('click', (e) => {
     const currentTarget = e.currentTarget;
     e.preventDefault();
 
     let form_data = new FormData(form);
-    if (btnFile.files.length > 0) {
-      form_data.append('userfile', btnFile.files);
+    
+    if (listFiles.length > 0) {
+      const dataFiles = Array.from(listFiles, ({itemFile}) => itemFile);
+      
+      for (let i = 0; i < dataFiles.length; i++) {
+        form_data.append('userfile[]', dataFiles[i]);
+      }
     }
 
     $.ajax({
       type: "POST",
-      //
       processData: false,
-      //contentType: 'json',
       contentType: false,
-      //
+      cache: false,
       url: 'send.php',
       data: form_data,
       beforeSend: function () {
@@ -49,7 +54,6 @@
       },
       error: function (data) {
         if (data.responseText !== '') {
-          const alertDangerSpan = alertDanger.querySelector('.alert-danger-span');
           alertDangerSpan.innerHTML = data.responseText;
         }
         setOnClass(alertDanger, alertUp);
@@ -60,9 +64,38 @@
 
   btnFile.addEventListener('change', (e) => {
     if (btnFile.files.length !== 0) {
+      for (let i = 0; i < btnFile.files.length; i++) {
+        //Проверка количества файлов
+        if (listFiles.length + 1 > maxFileCount) {
+          alertDangerSpan.innerHTML = `Файлов не может быть больше ${maxFileCount}. 
+            Остальные файлы не будут загружены.`;
+          setOnClass(alertDanger, alertUp);
+          offAlert(alertDanger);
+          break;
+        }
+        
+        const file = btnFile.files[i];
 
+
+        // let textError = '';
+        // const file = btnFile.files[i];
+        // const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+
+        // //Проверка расширения файла
+        // if (!allowedExtensions.includes(fileType)) {
+        //   textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
+        // }
+        // //Поверка размера файлов
+        // if (file.size > maxFileSize) {
+        //   textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
+        // }
+        //Добавляем файлы в разметку и массив listFiles 
+        addItemFile(file, checkFile(file));
+      }
+      
+      btnFile.value = '';
     }
-    labelBtnText(e.currentTarget);
+    //labelBtnText(e.currentTarget);
   });
 
   btnCloseAlert.addEventListener('click', handlerAlert);
@@ -71,23 +104,81 @@
     e.preventDefault;
     refreshCaptcha();
   });
-  
+
+  files.addEventListener('click', deleteFile);
+
   // function 
 
-  // обновление капчи
-  function refreshCaptcha() {
-    const captchaImg = form.querySelector('.img-captcha'),
-      captchaSrc = captchaImg.dataset.src,
-      captchaPrefix = captchaSrc.indexOf('?id') !== -1 ? '&rnd=' : '?rnd=',
-      captchaNewSrc = captchaSrc + captchaPrefix + (new Date()).getTime();
-      captchaImg.setAttribute('src', captchaNewSrc);
+  function checkFile(file) {
+    let textError = '';
+    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+
+    //Проверка расширения файла
+    if (!allowedExtensions.includes(fileType)) {
+      textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
+    }
+    //Поверка размера файлов
+    if (file.size > maxFileSize) {
+      textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
+    }
+
+    return textError;
+  }
+
+  //Генерируем событие input
+  function eventInput(elem) {
+    const event = new Event('input');
+    elem.dispatchEvent(event);
+  }
+
+  //Добавление файлов в список и элемента на форму
+  function addItemFile(file, textError) {
+    const templateFileItem = templateFilesItem.cloneNode(true),
+      fileConatiner = templateFileItem.querySelector('.file-conatiner'),
+      fileItem = templateFileItem.querySelector('.file-item'),
+      fileName = templateFileItem.querySelector('.file-name'),
+      fileError = templateFileItem.querySelector('div.invalid-feedback'),
+      fileClose = templateFileItem.querySelector('.file-close'),
+      fileNumber = new Date().getTime();
+    //Добавляем элемент на форму
+    fileConatiner.id = `file-${fileNumber}`;
+    fileClose.dataset.file = `file-${fileNumber}`;
+    fileName.textContent = file.name;
+    if (textError) {
+      setOnClass(fileItem, fileItemError);
+      fileError.innerHTML = textError;
+      setOnClass(fileError, invalidFeedbackVisible);
+    }
+    files.appendChild(templateFileItem);
+    //Добавляем ссылку на файл в массив
+    const newItemListFiles = {
+      itemNumber: `file-${fileNumber}`,
+      itemFile: file
+    };
+    listFiles = [...listFiles, newItemListFiles];
+    eventInput(form);
+  }
+
+  // удаление файла из списка и элемента из формы
+  function deleteFile(e) {
+    if (e.target.classList.contains('file-close')) {
+      const itemNumber = e.target.dataset.file;
+      const targetFileItem = e.currentTarget.querySelector(`#${itemNumber}`);
+      const indexFile = listFiles.findIndex(element => element.itemNumber === itemNumber);
+      //Удаляем файл из списка
+      if (indexFile !== -1) {
+        listFiles.splice(indexFile, 1);
+      }
+      targetFileItem.remove();
+      console.table('listFiles', listFiles);
+      eventInput(form);
+    }
   }
 
   //Закрытие алерта при нажатии на крестик
   function handlerAlert(e) {
-    const target = e.target;
-    if (target.classList.contains('alert-close')) {
-      const targetAlert = e.currentTarget.querySelector(`#${target.dataset.alert}`);
+    if (e.target.classList.contains('alert-close')) {
+      const targetAlert = e.currentTarget.querySelector(`#${e.target.dataset.alert}`);
       setOffClass(targetAlert, alertUp);
     }
   }
@@ -160,44 +251,43 @@
   };
 
   // проверяем наличие класса nameClass в элементе elementTarget формы и если класс есть, удаляем его 
-
   function setOffClass(elementTarget, nameClass) {
     if (elementTarget.classList.contains(nameClass)) {
       elementTarget.classList.toggle(nameClass);
     }
   };
 
+  // проверяем наличие атрибута nameAttr в элементе elementTarget формы и если атрибута нет, добавляем его его 
   function setOnAttr(elementTarget, nameAttr) {
     if (!elementTarget.hasAttribute(nameAttr)) {
       elementTarget.setAttribute(nameAttr, true);
     }
   }
 
+  // проверяем наличие атрибута nameAttr в элементе elementTarget формы и если атрибут есть, удаляем его его 
   function setOffArrt(elementTarget, nameAttr) {
     if (elementTarget.hasAttribute(nameAttr)) {
       elementTarget.removeAttribute(nameAttr);
     }
   }
 
-  function labelBtnText(elementTarget, clearFile) {
-    if (clearFile) {
-      elementTarget.nextElementSibling.textContent = 'Загрузить файл';
-      return;
-    }
-    if (elementTarget.files.length === 0) {
-      elementTarget.nextElementSibling.textContent = 'Файл не выбран';
-    } else {
-      elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({
-        name
-      }) => name);
-    }
-  }
+  // function labelBtnText(elementTarget, clearFile) {
+  //   if (clearFile) {
+  //     elementTarget.nextElementSibling.textContent = 'Загрузить файл (не более 5 шт. по 2 Мб)';
+  //     return;
+  //   }
+  //   if (elementTarget.files.length === 0) {
+  //     elementTarget.nextElementSibling.textContent = 'Файл не выбран';
+  //   } else {
+  //     elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({
+  //       name
+  //     }) => name);
+  //   }
+  // }
 
   function controlSuccess() {
     const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    const formControlsValues = Array.from(formControls, ({
-      value
-    }) => value).filter(Boolean);
+    const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
 
     if (!checkBox.checked ||
       formControlsValues.length !== formControls.length ||
@@ -216,8 +306,27 @@
     }
     setOnAttr(currentTarget, btnSubmitAttr);
     setOnClass(currentTarget, btnSubmitClass);
-    labelBtnText(btnFile, true);
+    //labelBtnText(btnFile, true);
+    deleteElementFiles();
     refreshCaptcha();
+  }
+
+  //Удаление элементов разметки со списком файлов
+  function deleteElementFiles() {
+    const elementFiles = files.querySelectorAll('.file-conatiner');
+    
+    for (let i = 0; i < elementFiles.length; i++) {
+      elementFiles[i].remove();
+    }
+  }
+
+  // обновление капчи
+  function refreshCaptcha() {
+    const captchaImg = form.querySelector('.img-captcha'),
+      captchaSrc = captchaImg.dataset.src,
+      captchaPrefix = captchaSrc.indexOf('?id') !== -1 ? '&rnd=' : '?rnd=',
+      captchaNewSrc = captchaSrc + captchaPrefix + (new Date()).getTime();
+    captchaImg.setAttribute('src', captchaNewSrc);
   }
 
   function offAlert(targetAlert) {

@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 const
     MAX_FILE_SIZE = 2097152, // максимальный размер файла (в байтах)
     MAX_FILE_COUNT = 5, //максимальное количество файлов
-    ALLOWED_EXTENSIONS = array('jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt'), // разрешённые расширения файлов
+    ALLOWED_EXTENSIONS = array('jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'rtf'), // разрешённые расширения файлов
     MAIL_FROM = 'Shelest.ckcco@gmail.com', // от какого email будет отправляться письмо
     MAIL_FROM_NAME = 'Cайт СК ССО Шелест', // от какого имени будет отправляться письмо
     MAIL_FROM_SITE = 'ск-шелест72.рф',
@@ -95,8 +95,10 @@ if (isset($_POST['captcha']) && isset($_SESSION['captcha'])) {
     }
 } else {
     $validate = 'error';
-    $resultMessage .= "Произошла ошибка при проверке капчи! <br>";
+    $resultMessage .= "Произошла ошибка при проверке captcha! <br>";
 }
+
+print_r ($_FILES);
 
 //Проверяем прикрепленные файлы
 if (!empty($_FILES['userfile']['name'][0])) {
@@ -133,21 +135,7 @@ if (!empty($_FILES['userfile']['name'][0])) {
         $validate = 'error';
         $resultMessage .= "Произошла ошибка! Количество файлов не может быть больше - " . MAX_FILE_COUNT . "! <br>";
     }
-}
-
-
-
-/* if (
-    !trim($name) or
-    (!filter_var(trim($email), FILTER_VALIDATE_EMAIL)) or
-    (!trim($text)) or
-    (!trim($phone)) or
-    (!trim($theme))
-) {
-    header('HTTP/1.0 403 Forbidden');
-    echo "Сообщение не было отправлено. Проверьте заполнение полей и адрес вашей почты";
-    exit();
-} */
+} 
 
 //Если проверка не пройдена, возвращаем результат проверки и останавливаем скрипт
 if ($validate == 'error') {
@@ -177,20 +165,7 @@ try {
             'allow_self_signed' => true
         )
     );
-    /* 
-    // Настройки вашей почты
-    $mail->Host       = 'ssl://smtp.gmail.com'; // SMTP сервера GMAIL
-    $mail->Username   = 'Shelest.ckcco@gmail.com'; // Логин на почте
-    $mail->Password   = 'Ljr72vip'; // Пароль на почте
-    $mail->SMTPSecure = 'ssl';
-    $mail->Port       = 465;
-    $mail->setFrom('Shelest.ckcco@gmail.com', 'Поступило обращение'); // Адрес самой почты и имя отправителя
-
-    // Получатель письма
-    //$mail->addAddress('name@yandex.ru');  // Ещё один, если нужен
-    $mail->addAddress('musorov@gmail.com');
-    */
-
+    
     $mail->Host       = MAIL_SMTP_HOST; // SMTP сервера GMAIL
     $mail->Username   = MAIL_SMTP_USERNAME; // Логин на почте
     $mail->Password   = MAIL_SMTP_PASSWORD; // Пароль на почте
