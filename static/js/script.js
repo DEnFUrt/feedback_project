@@ -2,6 +2,10 @@
 
   let listFiles = [];
 
+  countFileError.innerHTML = `Файлов не может быть больше ${maxFileCount}. 
+    Удалите лишние файлы.`;
+
+  
   for (let formControl of formControls) {
     focusBind(formControl);
     blurBind(formControl);
@@ -16,6 +20,19 @@
     } else {
       setOnAttr(btnSubmit, btnSubmitAttr);
       setOnClass(btnSubmit, btnSubmitClass);
+    }
+  });
+
+  form.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+
+  form.addEventListener('drop', (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files.length !== 0) {
+      console.log('dataTransfer.files: ', e.dataTransfer.files);
+      loadFileForm(e.dataTransfer.files);
+      eventInput(form);
     }
   });
 
@@ -62,40 +79,13 @@
     });
   });
 
-  btnFile.addEventListener('change', (e) => {
+  btnFile.addEventListener('change', () => {
     if (btnFile.files.length !== 0) {
-      for (let i = 0; i < btnFile.files.length; i++) {
-        //Проверка количества файлов
-        if (listFiles.length + 1 > maxFileCount) {
-          alertDangerSpan.innerHTML = `Файлов не может быть больше ${maxFileCount}. 
-            Остальные файлы не будут загружены.`;
-          setOnClass(alertDanger, alertUp);
-          offAlert(alertDanger);
-          break;
-        }
-        
-        const file = btnFile.files[i];
-
-
-        // let textError = '';
-        // const file = btnFile.files[i];
-        // const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-
-        // //Проверка расширения файла
-        // if (!allowedExtensions.includes(fileType)) {
-        //   textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
-        // }
-        // //Поверка размера файлов
-        // if (file.size > maxFileSize) {
-        //   textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
-        // }
-        //Добавляем файлы в разметку и массив listFiles 
-        addItemFile(file, checkFile(file));
-      }
-      
+      console.log('btnFile.files: ', btnFile.files);
+      loadFileForm(btnFile.files);
       btnFile.value = '';
+      eventInput(form);
     }
-    //labelBtnText(e.currentTarget);
   });
 
   btnCloseAlert.addEventListener('click', handlerAlert);
@@ -109,26 +99,23 @@
 
   // function 
 
-  function checkFile(file) {
-    let textError = '';
-    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-
-    //Проверка расширения файла
-    if (!allowedExtensions.includes(fileType)) {
-      textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
-    }
-    //Поверка размера файлов
-    if (file.size > maxFileSize) {
-      textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
-    }
-
-    return textError;
-  }
-
   //Генерируем событие input
   function eventInput(elem) {
     const event = new Event('input');
     elem.dispatchEvent(event);
+  }
+
+  //Обработчик события загрузка файлов в форму
+  function loadFileForm(loadFiles) {
+    for (let i = 0; i < loadFiles.length; i++) {
+      const file = loadFiles[i];
+      //Добавляем файлы в разметку и массив listFiles 
+      addItemFile(file, checkFile(file));
+      //ПРоверяем количество файлов
+      checkCountFile() ?
+        setOnClass(countFileError, invalidFeedbackVisible) :
+        setOffClass(countFileError, invalidFeedbackVisible);
+    }
   }
 
   //Добавление файлов в список и элемента на форму
@@ -156,7 +143,7 @@
       itemFile: file
     };
     listFiles = [...listFiles, newItemListFiles];
-    eventInput(form);
+    console.log('AddFiles: ', listFiles);
   }
 
   // удаление файла из списка и элемента из формы
@@ -169,10 +156,40 @@
       if (indexFile !== -1) {
         listFiles.splice(indexFile, 1);
       }
+      console.log('DelFiles: ', listFiles);
       targetFileItem.remove();
-      console.table('listFiles', listFiles);
+      //ПРоверям количество оставшихся файлов
+      checkCountFile() ?
+          setOnClass(countFileError, invalidFeedbackVisible) :
+          setOffClass(countFileError, invalidFeedbackVisible);
       eventInput(form);
     }
+  }
+
+  //Проверка количества файлов
+  function checkCountFile() {
+    if (listFiles.length > maxFileCount) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  //Проверка расширения и размера файлов
+  function checkFile(file) {
+    let textError = '';
+    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+
+    //Проверка расширения файла
+    if (!allowedExtensions.includes(fileType)) {
+      textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
+    }
+    //Поверка размера файлов
+    if (file.size > maxFileSize) {
+      textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
+    }
+
+    return textError;
   }
 
   //Закрытие алерта при нажатии на крестик
@@ -271,20 +288,6 @@
     }
   }
 
-  // function labelBtnText(elementTarget, clearFile) {
-  //   if (clearFile) {
-  //     elementTarget.nextElementSibling.textContent = 'Загрузить файл (не более 5 шт. по 2 Мб)';
-  //     return;
-  //   }
-  //   if (elementTarget.files.length === 0) {
-  //     elementTarget.nextElementSibling.textContent = 'Файл не выбран';
-  //   } else {
-  //     elementTarget.nextElementSibling.textContent = Array.from(elementTarget.files, ({
-  //       name
-  //     }) => name);
-  //   }
-  // }
-
   function controlSuccess() {
     const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
     const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
@@ -306,8 +309,9 @@
     }
     setOnAttr(currentTarget, btnSubmitAttr);
     setOnClass(currentTarget, btnSubmitClass);
-    //labelBtnText(btnFile, true);
     deleteElementFiles();
+    listFiles.length = 0;
+    console.log('FormReset: ', listFiles);
     refreshCaptcha();
   }
 

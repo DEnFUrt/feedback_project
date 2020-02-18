@@ -12,7 +12,8 @@ const checkBox = document.querySelector('input[type="checkbox"]'),
   btnCloseAlert = document.querySelector('.alert-block'),
   files = document.getElementById('files'),
   captcha = form.querySelector('.refresh-captcha'),
-  templateFilesItem = form.querySelector('#template-files-item').content;
+  templateFilesItem = form.querySelector('#template-files-item').content,
+  countFileError = form.querySelector('.custom-file div.invalid-feedback');
   
   
 
