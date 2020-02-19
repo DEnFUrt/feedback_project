@@ -2,9 +2,35 @@
 
   let listFiles = [];
 
-  countFileError.innerHTML = `Файлов не может быть больше ${maxFileCount}. 
-    Удалите лишние файлы.`;
+  countFileError.innerHTML = `Файлов не может быть больше ${maxFileCount}. Удалите лишние файлы.`;
+  btnFileValue.innerHTML = defaultFileValue;
 
+  // создаем экземпляр наблюдателя
+  const observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      switch (mutation.type) {
+        case 'attributes':
+          if (mutation.target.classList.contains(fileDrop)) {
+            btnFileValue.innerHTML = 'Брось файлы здесь.';
+            } else {
+          btnFileValue.innerHTML = defaultFileValue;
+          }
+          break;
+        default:
+          break;  
+      } 
+    });    
+  });
+
+  // настраиваем наблюдатель
+  const config = {
+    attributes: true,
+    attributeOldValue: false,
+  }
+
+  // передаем элемент и настройки в наблюдатель
+  //отслеживаем событие drop у кнопки загрузки файлов
+  observer.observe(labelBtnFile, config);
   
   for (let formControl of formControls) {
     focusBind(formControl);
@@ -23,12 +49,24 @@
     }
   });
 
-  form.addEventListener('dragover', (e) => {
+  document.addEventListener('dragover', (e) => {
     e.preventDefault();
+    setOnClass(labelBtnFile, fileDrop);
   });
 
-  form.addEventListener('drop', (e) => {
+  document.addEventListener('dragleave', (e) => {
     e.preventDefault();
+    setOffClass(labelBtnFile, fileDrop);
+  });
+
+  document.addEventListener('drop', (e) => {
+    e.preventDefault();
+    setOffClass(labelBtnFile, fileDrop);
+  });
+
+  labelBtnFile.addEventListener('drop', (e) => {
+    e.preventDefault();
+    setOffClass(labelBtnFile, fileDrop);
     if (e.dataTransfer.files.length !== 0) {
       console.log('dataTransfer.files: ', e.dataTransfer.files);
       loadFileForm(e.dataTransfer.files);

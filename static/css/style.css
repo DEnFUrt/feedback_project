@@ -55,12 +55,6 @@ li {
   user-select: none;
 }
 
-/* .label-custom-file {
-  text-align: left;
-  font-size: 14px;
-  color: #9e9e9e;
-} */
-
 .btn-custom {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -107,7 +101,8 @@ li {
   max-width: 450px;
   margin: auto;
   display: block;
-  border: 1px solid rgb(177, 176, 176)
+  border: 1px solid rgb(177, 176, 176);
+  transition: all .3s
 }
 
 .custom-file .btn-tertiary:hover, .custom-file .btn-tertiary:hover {
@@ -136,11 +131,6 @@ li {
   content: "\f093"
 }
 
-/* .custom-file .input-file + .js-labelFile.has-file .icon:before {
-  content: "\f00c";
-  color: #5AAC7B
-} */
-
 .form-check-label {
   font-size: 13px;
 }
@@ -158,11 +148,6 @@ li {
   color: rgba(255, 0, 0, 0.541);
 }
 
-.file-name {
-  
-  /* text-align: left; */
-}
-
 .file-item > button.close {
   margin-right: 10px;
   margin-top: -2px;
@@ -171,4 +156,20 @@ li {
 
 .file-conatiner {
   margin-bottom: 15px;
+}
+
+.btn.file-drop {
+  line-height: 100px;
+  max-width: 450px;
+  border: 3px dashed rgba(10, 93, 202, 0.774);
+  background-color: rgba(128, 128, 128, 0.192);
+  transition: all .3s
+}
+
+.btn.file-drop:hover {
+  line-height: 100px;
+  max-width: 450px;
+  border: 3px dotted rgba(10, 93, 202, 0.801);
+  background-color: rgba(67, 95, 77, 0.747);
+  transition: all .3s
 }
