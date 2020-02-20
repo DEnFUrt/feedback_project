@@ -6,15 +6,13 @@
   btnFileValue.innerHTML = defaultFileValue;
 
   // создаем экземпляр наблюдателя
-  const observer = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
+  const observer = new MutationObserver(mutations => {
+    mutations.forEach(mutation => {
       switch (mutation.type) {
         case 'attributes':
-          if (mutation.target.classList.contains(fileDrop)) {
-            btnFileValue.innerHTML = 'Брось файлы здесь.';
-            } else {
-          btnFileValue.innerHTML = defaultFileValue;
-          }
+          mutation.target.classList.contains(fileDrop) ?
+            btnFileValue.innerHTML = 'Брось файлы здесь.' :
+            btnFileValue.innerHTML = defaultFileValue;
           break;
         default:
           break;  
@@ -25,11 +23,10 @@
   // настраиваем наблюдатель
   const config = {
     attributes: true,
-    attributeOldValue: false,
   }
 
   // передаем элемент и настройки в наблюдатель
-  //отслеживаем событие drop у кнопки загрузки файлов
+  //отслеживаем появление класса file-drop у кнопки загрузки файлов
   observer.observe(labelBtnFile, config);
   
   for (let formControl of formControls) {
@@ -68,7 +65,6 @@
     e.preventDefault();
     setOffClass(labelBtnFile, fileDrop);
     if (e.dataTransfer.files.length !== 0) {
-      console.log('dataTransfer.files: ', e.dataTransfer.files);
       loadFileForm(e.dataTransfer.files);
       eventInput(form);
     }
@@ -98,28 +94,24 @@
       data: form_data,
       beforeSend: function () {
         setOnClass(alertSpinner, alertUp);
+        $("#modalAlert").modal('show');
       },
       complete: function () {
         setOffClass(alertSpinner, alertUp);
       },
       success: function () {
         setOnClass(alertSuccess, alertUp);
-        offAlert(alertSuccess);
         formReset(currentTarget);
       },
       error: function (data) {
-        if (data.responseText !== '') {
-          alertDangerSpan.innerHTML = data.responseText;
-        }
+        alertDangerSpan.innerHTML = data.responseText;
         setOnClass(alertDanger, alertUp);
-        offAlert(alertDanger);
       }
     });
   });
 
   btnFile.addEventListener('change', () => {
     if (btnFile.files.length !== 0) {
-      console.log('btnFile.files: ', btnFile.files);
       loadFileForm(btnFile.files);
       btnFile.value = '';
       eventInput(form);
@@ -128,14 +120,14 @@
 
   btnCloseAlert.addEventListener('click', handlerAlert);
 
-  captcha.addEventListener('click', (e) => {
-    e.preventDefault;
+  btnCaptcha.addEventListener('click', (e) => {
+    e.preventDefault();
     refreshCaptcha();
   });
 
   files.addEventListener('click', deleteFile);
 
-  // function 
+  // FUNCTION
 
   //Генерируем событие input
   function eventInput(elem) {
@@ -179,9 +171,8 @@
     const newItemListFiles = {
       itemNumber: `file-${fileNumber}`,
       itemFile: file
-    };
+    }
     listFiles = [...listFiles, newItemListFiles];
-    console.log('AddFiles: ', listFiles);
   }
 
   // удаление файла из списка и элемента из формы
@@ -194,7 +185,7 @@
       if (indexFile !== -1) {
         listFiles.splice(indexFile, 1);
       }
-      console.log('DelFiles: ', listFiles);
+
       targetFileItem.remove();
       //ПРоверям количество оставшихся файлов
       checkCountFile() ?
@@ -235,6 +226,7 @@
     if (e.target.classList.contains('alert-close')) {
       const targetAlert = e.currentTarget.querySelector(`#${e.target.dataset.alert}`);
       setOffClass(targetAlert, alertUp);
+      $('#modalAlert').modal('hide');
     }
   }
 
@@ -274,6 +266,7 @@
         break;
     }
 
+    //Эвент на инпуты
     formControl.addEventListener('input', (e) => {
       checkRegExValue(e.currentTarget.value, regexTemp) ?
         setOnClass(e.currentTarget.nextElementSibling, invalidFeedbackVisible) :
@@ -281,6 +274,7 @@
     });
   }
 
+  //ПРоверяем ввод в инпуты по маске
   function checkRegExValue(elementTargetValue, constRegex) {
     if (!constRegex.test(elementTargetValue)) {
       return true;
@@ -289,6 +283,7 @@
     }
   }
 
+  //Функция проверки инпутов на пустоту
   function checkValue(elementTargetValue) {
     if (elementTargetValue === '') {
       return true;
@@ -298,7 +293,6 @@
   };
 
   // проверяем наличие класса nameClass в элементе elementTarget формы и если класса нет, ставим его
-
   function setOnClass(elementTarget, nameClass) {
     if (!elementTarget.classList.contains(nameClass)) {
       elementTarget.classList.toggle(nameClass);
@@ -326,6 +320,7 @@
     }
   }
 
+  //ПРоверка на валидность формы. Если валидна кнопка submit активна
   function controlSuccess() {
     const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
     const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
@@ -339,6 +334,7 @@
     }
   }
 
+  //Ресет формы
   function formReset(currentTarget) {
     //возвращаем Label на место
     form.reset();
@@ -349,7 +345,6 @@
     setOnClass(currentTarget, btnSubmitClass);
     deleteElementFiles();
     listFiles.length = 0;
-    console.log('FormReset: ', listFiles);
     refreshCaptcha();
   }
 
@@ -376,5 +371,9 @@
       setOffClass(targetAlert, alertUp);
     }, 10000);
   }
+
+  $('#modalAlert').on('hidden.bs.modal', function() {         //функция jquery из пакета bootstrap реагирует на закрытие карусели
+    
+  });
 
 })();

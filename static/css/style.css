@@ -165,11 +165,3 @@ li {
   background-color: rgba(128, 128, 128, 0.192);
   transition: all .3s
 }
-
-.btn.file-drop:hover {
-  line-height: 100px;
-  max-width: 450px;
-  border: 3px dotted rgba(10, 93, 202, 0.801);
-  background-color: rgba(67, 95, 77, 0.747);
-  transition: all .3s
-}

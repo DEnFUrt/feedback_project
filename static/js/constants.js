@@ -1,5 +1,5 @@
 //DOM
-// const container = document.querySelector('.container'),
+
 const checkBox = document.querySelector('input[type="checkbox"]'),
   btnFile = document.getElementById('customFile'),  
   alertSuccess = document.getElementById('alert-success'),
@@ -9,7 +9,7 @@ const checkBox = document.querySelector('input[type="checkbox"]'),
   btnCloseAlert = document.querySelector('.alert-block'),
   files = document.getElementById('files'),
   form = document.querySelector('.form'),
-  captcha = form.querySelector('.refresh-captcha'),
+  btnCaptcha = form.querySelector('.refresh-captcha'),
   formControls = form.querySelectorAll('.form-control'),
   btnSubmit = form.querySelector('input[type="submit"]'),
   templateFilesItem = form.querySelector('#template-files-item').content,
@@ -17,7 +17,6 @@ const checkBox = document.querySelector('input[type="checkbox"]'),
   countFileError = blockFile.querySelector('div.invalid-feedback'),
   btnFileValue = blockFile.querySelector('.js-fileName'),
   labelBtnFile = blockFile.querySelector('.js-labelFile');
-
 
 //PARAMETERS
 const maxFileSize = 2097152, // максимальный размер файла (в байтах)
