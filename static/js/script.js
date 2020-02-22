@@ -2,9 +2,6 @@
 
   let listFiles = [];
 
-  countFileError.innerHTML = `Файлов не может быть больше ${maxFileCount}. Удалите лишние файлы.`;
-  btnFileValue.innerHTML = defaultFileValue;
-
   // создаем экземпляр наблюдателя
   const observer = new MutationObserver(mutations => {
     mutations.forEach(mutation => {
@@ -15,20 +12,20 @@
             btnFileValue.innerHTML = defaultFileValue;
           break;
         default:
-          break;  
-      } 
-    });    
+          break;
+      }
+    });
   });
 
   // настраиваем наблюдатель
-  const config = {
+  const observerConfig = {
     attributes: true,
   }
 
   // передаем элемент и настройки в наблюдатель
   //отслеживаем появление класса file-drop у кнопки загрузки файлов
-  observer.observe(labelBtnFile, config);
-  
+  observer.observe(labelBtnFile, observerConfig);
+
   for (let formControl of formControls) {
     focusBind(formControl);
     blurBind(formControl);
@@ -46,6 +43,7 @@
     }
   });
 
+  //Блок эвентов перетащи и брось файлы
   document.addEventListener('dragover', (e) => {
     e.preventDefault();
     setOnClass(labelBtnFile, fileDrop);
@@ -70,16 +68,39 @@
     }
   });
 
+  //добавляем файл по кнопке 
+  btnFile.addEventListener('change', () => {
+    if (btnFile.files.length !== 0) {
+      loadFileForm(btnFile.files);
+      btnFile.value = '';
+      eventInput(form);
+    }
+  });
+
+  //Удаляем загруженный файл
+  files.addEventListener('click', deleteFile);
+
+  //Обновлем капчу
+  btnCaptcha.addEventListener('click', (e) => {
+    e.preventDefault();
+    refreshCaptcha();
+  });
+
+  //Закрываем алерт
+  btnCloseAlert.addEventListener('click', handlerAlert);
+
   //Отправка формы
   btnSubmit.addEventListener('click', (e) => {
     const currentTarget = e.currentTarget;
     e.preventDefault();
 
     let form_data = new FormData(form);
-    
+
     if (listFiles.length > 0) {
-      const dataFiles = Array.from(listFiles, ({itemFile}) => itemFile);
-      
+      const dataFiles = Array.from(listFiles, ({
+        itemFile
+      }) => itemFile);
+
       for (let i = 0; i < dataFiles.length; i++) {
         form_data.append('userfile[]', dataFiles[i]);
       }
@@ -110,23 +131,6 @@
     });
   });
 
-  btnFile.addEventListener('change', () => {
-    if (btnFile.files.length !== 0) {
-      loadFileForm(btnFile.files);
-      btnFile.value = '';
-      eventInput(form);
-    }
-  });
-
-  btnCloseAlert.addEventListener('click', handlerAlert);
-
-  btnCaptcha.addEventListener('click', (e) => {
-    e.preventDefault();
-    refreshCaptcha();
-  });
-
-  files.addEventListener('click', deleteFile);
-
   // FUNCTION
 
   //Генерируем событие input
@@ -148,6 +152,23 @@
     }
   }
 
+  //Проверка расширения и размера файлов
+  function checkFile(file) {
+    let textError = '';
+    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+
+    //Проверка расширения файла
+    if (!allowedExtensions.includes(fileType)) {
+      textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
+    }
+    //Поверка размера файлов
+    if (file.size > maxFileSize) {
+      textError += `Размер файла <b>${file.name}</b> больше ${(maxFileSize / 1024 / 1024).toFixed(1)}Мб <br>`;
+    }
+
+    return textError;
+  }
+
   //Добавление файлов в список и элемента на форму
   function addItemFile(file, textError) {
     const templateFileItem = templateFilesItem.cloneNode(true),
@@ -160,7 +181,7 @@
     //Добавляем элемент на форму
     fileConatiner.id = `file-${fileNumber}`;
     fileClose.dataset.file = `file-${fileNumber}`;
-    fileName.textContent = file.name;
+    fileName.textContent = `${file.name}, ${(file.size / 1024 / 1024).toFixed(1)}Mb`;
     if (textError) {
       setOnClass(fileItem, fileItemError);
       fileError.innerHTML = textError;
@@ -173,6 +194,15 @@
       itemFile: file
     }
     listFiles = [...listFiles, newItemListFiles];
+  }
+
+  //Проверка количества файлов
+  function checkCountFile() {
+    if (listFiles.length > maxFileCount) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // удаление файла из списка и элемента из формы
@@ -189,44 +219,9 @@
       targetFileItem.remove();
       //ПРоверям количество оставшихся файлов
       checkCountFile() ?
-          setOnClass(countFileError, invalidFeedbackVisible) :
-          setOffClass(countFileError, invalidFeedbackVisible);
+        setOnClass(countFileError, invalidFeedbackVisible) :
+        setOffClass(countFileError, invalidFeedbackVisible);
       eventInput(form);
-    }
-  }
-
-  //Проверка количества файлов
-  function checkCountFile() {
-    if (listFiles.length > maxFileCount) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  //Проверка расширения и размера файлов
-  function checkFile(file) {
-    let textError = '';
-    const fileType = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
-
-    //Проверка расширения файла
-    if (!allowedExtensions.includes(fileType)) {
-      textError += `Тип файла <b>${file.name}</b> не разрешён <br>`;
-    }
-    //Поверка размера файлов
-    if (file.size > maxFileSize) {
-      textError += `Размер файла <b>${file.name}</b> больше ${maxFileSize / 1024 / 1024} Мб <br>`;
-    }
-
-    return textError;
-  }
-
-  //Закрытие алерта при нажатии на крестик
-  function handlerAlert(e) {
-    if (e.target.classList.contains('alert-close')) {
-      const targetAlert = e.currentTarget.querySelector(`#${e.target.dataset.alert}`);
-      setOffClass(targetAlert, alertUp);
-      $('#modalAlert').modal('hide');
     }
   }
 
@@ -323,7 +318,9 @@
   //ПРоверка на валидность формы. Если валидна кнопка submit активна
   function controlSuccess() {
     const arrDivInvalidFeedbackVisible = document.querySelectorAll(`.invalid-feedback.${invalidFeedbackVisible}`);
-    const formControlsValues = Array.from(formControls, ({value}) => value).filter(Boolean);
+    const formControlsValues = Array.from(formControls, ({
+      value
+    }) => value).filter(Boolean);
 
     if (!checkBox.checked ||
       formControlsValues.length !== formControls.length ||
@@ -351,7 +348,7 @@
   //Удаление элементов разметки со списком файлов
   function deleteElementFiles() {
     const elementFiles = files.querySelectorAll('.file-conatiner');
-    
+
     for (let i = 0; i < elementFiles.length; i++) {
       elementFiles[i].remove();
     }
@@ -366,14 +363,32 @@
     captchaImg.setAttribute('src', captchaNewSrc);
   }
 
-  function offAlert(targetAlert) {
-    setTimeout(() => {
-      setOffClass(targetAlert, alertUp);
-    }, 10000);
+  //Закрытие алерта при нажатии на крестик
+  function handlerAlert(e) {
+    let targetAlert = null;
+    switch (true) {
+      case (e.key === 'Escape'):
+        targetAlert = e.currentTarget.querySelector('.alert-block .d-block');
+        if (targetAlert !== null) { 
+          setOffClass(targetAlert, alertUp);
+          $('#modalAlert').modal('hide');
+        }
+        break;
+    
+      case (e.target.classList.contains('alert-close')):
+        targetAlert = e.currentTarget.querySelector(`#${e.target.dataset.alert}`);
+        setOffClass(targetAlert, alertUp);
+        $('#modalAlert').modal('hide');
+        break;
+    }
   }
 
-  $('#modalAlert').on('hidden.bs.modal', function() {         //функция jquery из пакета bootstrap реагирует на закрытие карусели
-    
+  $('#modalAlert').on('shown.bs.modal', function () { //функция jquery из пакета bootstrap реагирует на открытие модального окна
+    document.addEventListener('keyup', handlerAlert);
+  });
+
+  $('#modalAlert').on('hidden.bs.modal', function () { //функция jquery из пакета bootstrap реагирует на закрытие модального окна
+    document.removeEventListener('keyup', handlerAlert);
   });
 
 })();

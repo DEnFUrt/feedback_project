@@ -30,9 +30,12 @@ const invalidFeedbackVisible = 'd-block',
   btnSubmitClass = 'btn-secondary',
   fileItemError = 'file-item-error',
   fileDrop = 'file-drop',
-  defaultFileValue = `Загрузить файл (не более ${maxFileCount}шт и до ${maxFileSize / 1024 / 1024}Мб)`;
+  defaultFileValue = `Загрузить файл (не более ${maxFileCount}шт и до ${(maxFileSize / 1024 / 1024).toFixed(0)}Мб)`;
   
 
 const regexPhone = /^[8|7]{1}[0-9]{10}$/,
   regexEmail = /^([\w-]+\.)*[\w-]+@[\w-]+(\.[\w-]+)*\.[a-z]{2,6}$/,
   regexInput = /[А-Яа-я\w]/;
+
+  countFileError.innerHTML = `Файлов не может быть больше ${maxFileCount}. Удалите лишние файлы.`;
+  btnFileValue.innerHTML = defaultFileValue;

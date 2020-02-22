@@ -98,7 +98,7 @@ if (isset($_POST['captcha']) && isset($_SESSION['captcha'])) {
     $resultMessage .= "Произошла ошибка при проверке captcha! <br>";
 }
 
-print_r ($_FILES);
+//print_r ($_FILES);
 
 //Проверяем прикрепленные файлы
 if (!empty($_FILES['userfile']['name'][0])) {
@@ -141,8 +141,6 @@ if (!empty($_FILES['userfile']['name'][0])) {
 if ($validate == 'error') {
     sendError($resultMessage);
 }
-
-
 
 //Отправка сообщения
 

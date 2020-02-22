@@ -68,8 +68,13 @@ li {
   text-align: center;
 }
 
-.alert-custom>button {
+.alert-custom>button.close {
   outline: none;
+  top: -3px;
+}
+
+.alert-custom span.alert-close {
+  margin-top: -2px;
 }
 
 .img-captcha {

@@ -13,45 +13,44 @@
 </head>
 
 <body>
-  <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="ModalAlert"
-    aria-hidden="true" data-backdrop="static">
+  <!-- Модальное окно -->
+  <div class="modal fade" id="modalAlert" tabindex="-1" role="dialog" aria-labelledby="ModalAlert" aria-hidden="true"
+    data-backdrop="static">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-body p-0">
           <!-- Spinner -->
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div id="alert-spinner" class="alert alert-warning col alert-custom d-none">
-        <div class="d-flex align-items-center">
-          <strong>Отправляем сообщение...</strong>
-          <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Alert message -->
-  <div class="container-fluid">
-    <div class="row justify-content-center alert-block">
-      <!-- Alert error -->
-      <div id="alert-danger"
-        class="alert alert-danger alert-dismissible col d-none alert-custom" role="alert">
-        <span class="alert-danger-span">Сообщение не отправлено. Попробуйте отправить сообщение ещё раз через
-          некоторое время.</span>
-        <button type="button" class="close" aria-label="Close">
-          <span class="alert-close" data-alert="alert-danger" aria-hidden="true">×</span>
-        </button>
-      </div>
-      <!-- Alert success -->
-      <div id="alert-success"
-        class="alert alert-success alert-dismissible col d-none alert-custom" role="alert">
-        Сообщение отправлено успешно!
-        <button type="button" class="close" aria-label="Close">
-          <span class="alert-close" data-alert="alert-success" aria-hidden="true">×</span>
-        </button>
-      </div>
-    </div>
-  </div>
-          
+          <div class="container-fluid">
+            <div class="row justify-content-center">
+              <div id="alert-spinner" class="alert alert-warning col alert-custom d-none">
+                <div class="d-flex align-items-center">
+                  <strong>Отправляем сообщение...</strong>
+                  <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Alert message -->
+          <div class="container-fluid">
+            <div class="row justify-content-center alert-block">
+              <!-- Alert error -->
+              <div id="alert-danger" class="alert alert-danger alert-dismissible col d-none alert-custom" role="alert">
+                <span class="alert-danger-span">Сообщение не отправлено. Попробуйте отправить сообщение ещё раз через
+                  некоторое время.</span>
+                <button type="button" class="close" aria-label="Close">
+                  <span class="alert-close" data-alert="alert-danger" aria-hidden="true">×</span>
+                </button>
+              </div>
+              <!-- Alert success -->
+              <div id="alert-success" class="alert alert-success alert-dismissible col d-none alert-custom"
+                role="alert">
+                Сообщение отправлено успешно!
+                <button type="button" class="close" aria-label="Close">
+                  <span class="alert-close" data-alert="alert-success" aria-hidden="true">×</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,25 +63,25 @@
     <form class="form" id="feedback" autocomplete="off" enctype="multipart/form-data">
       <!-- Поле Имя -->
       <div class="form-group form-custom">
-        <label for="inputName" class="label-custom">Имя</label>
+        <label for="inputName" class="label-custom">Имя*</label>
         <input type="text" class="form-control" id="inputName" name="name" aria-describedby="nameHelp">
         <div class="invalid-feedback">Укажите имя</div>
       </div>
       <!-- Поле Почта -->
       <div class="form-group form-custom">
-        <label for="inputEmail" class="label-custom">Эл.почта (adress@email.domain)</label>
+        <label for="inputEmail" class="label-custom">Эл.почта (adress@email.domain)*</label>
         <input type="text" class="form-control" id="inputEmail" name="email" aria-describedby="emailHelp">
         <div class="invalid-feedback">Некорректный email</div>
       </div>
       <!-- Поле Телефон -->
       <div class="form-group form-custom">
-        <label for="inputPhone" class="label-custom">Телефон с кодом города (8..........)</label>
-        <input type="text" class="form-control" id="inputPhone" name="personalPhone">
+        <label for="inputPhone" class="label-custom">Телефон с кодом города (8..........)*</label>
+        <input type="text" class="form-control" id="inputPhone" name="personalPhone" maxlength="11">
         <div class="invalid-feedback">Некорректный номер телефона</div>
       </div>
       <!-- Поле Тема -->
       <div class="form-group form-custom">
-        <label for="select" class="label-custom">Выберите тему</label>
+        <label for="select" class="label-custom">Выберите тему*</label>
         <select class="form-control custom-select" name="theme" id="select">
           <option style="display: none;"></option>
           <option>Тема 1</option>
@@ -96,7 +95,7 @@
       </div>
       <!-- Поле Сообщение -->
       <div class="form-group form-custom">
-        <label for="message" class="label-custom">Сообщение</label>
+        <label for="message" class="label-custom">Сообщение*</label>
         <textarea class="form-control" id="message" rows="3" cols="3" name="message"></textarea>
         <div class="invalid-feedback">Сообщение не может быть пустым</div>
       </div>
@@ -113,7 +112,6 @@
             <div class="invalid-feedback">...</div>
           </div>
         </template>
-
       </div>
       <!-- Кнопка Загрузить файл -->
       <div class="custom-file">
@@ -130,7 +128,7 @@
         <img class="img-captcha" src="./captcha/captcha.php" data-src="./captcha/captcha.php">
         <div class="btn btn-light position-relative refresh-captcha">Обновить</div>
         <div class="form-group form-custom">
-          <label for="captcha" class="label-custom">Код, показанный на изображении</label>
+          <label for="captcha" class="label-custom">Код, показанный на изображении*</label>
           <input type="text" name="captcha" maxlength="6" required="required" id="captcha" class="form-control captcha"
             autocomplete="off" value="">
           <div class="invalid-feedback">Введите код, показанный на изображении</div>
@@ -151,10 +149,7 @@
       </div>
     </form>
   </div>
-  
 </body>
-<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-  integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
 <script src="./static/js/jquery.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
   integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
