@@ -175,20 +175,36 @@
       fileConatiner = templateFileItem.querySelector('.file-conatiner'),
       fileItem = templateFileItem.querySelector('.file-item'),
       fileName = templateFileItem.querySelector('.file-name'),
+      fileSize = templateFileItem.querySelector('.file-size'),
       fileError = templateFileItem.querySelector('div.invalid-feedback'),
       fileClose = templateFileItem.querySelector('.file-close'),
-      fileNumber = new Date().getTime();
+      fileNumber = new Date().getTime(),
+      size = (file.size / 1024 / 1024).toFixed(2);
+    let name = file.name;
+    
     //Добавляем элемент на форму
     fileConatiner.id = `file-${fileNumber}`;
     fileClose.dataset.file = `file-${fileNumber}`;
-    fileName.textContent = `${file.name}, ${(file.size / 1024 / 1024).toFixed(1)}Mb`;
+    fileName.textContent = `${name}, `;
+    fileSize.textContent = `${size}Mb`;
+    fileName.style.visibility = 'hidden';
     if (textError) {
       setOnClass(fileItem, fileItemError);
       fileError.innerHTML = textError;
       setOnClass(fileError, invalidFeedbackVisible);
     }
     files.appendChild(templateFileItem);
-    //Добавляем ссылку на файл в массив
+        
+    let delCountChar = 2;
+    let maxWidthSpan = (fileConatiner.clientWidth / 100 * 70).toFixed(0);
+    while (fileName.offsetWidth > maxWidthSpan) {
+      name = name.slice(0, name.length - delCountChar);
+      fileName.textContent = `${name}~, `;
+      delCountChar = 1; 
+    }
+      fileName.style.visibility = 'visible';
+      
+      //Добавляем ссылку на файл в массив
     const newItemListFiles = {
       itemNumber: `file-${fileNumber}`,
       itemFile: file

@@ -140,12 +140,20 @@ li {
   font-size: 13px;
 }
 
+.file-conatiner {
+  margin-bottom: 15px;
+}
+
 .file-item {
   border: 1px solid rgb(177, 176, 176);
   border-radius: 5px;
   text-align: left;
   padding-left: 10px;
   padding-top: 5px;
+}
+
+.file-item span {
+  white-space: nowrap; 
 }
 
 .file-item.file-item-error {
@@ -157,10 +165,6 @@ li {
   margin-right: 10px;
   margin-top: -2px;
   outline: none;
-}
-
-.file-conatiner {
-  margin-bottom: 15px;
 }
 
 .btn.file-drop {
