@@ -33,8 +33,8 @@ const
     MAIL_ADDRESS =  array('musorov@gmail.com'), // кому необходимо отправить письмо, адреса необходимо перечислять через запятую
     MAIL_SMTP_HOST = 'ssl://smtp.gmail.com', // SMTP-хост
     MAIL_SMTP_PORT = '465', // SMTP-порт
-    MAIL_SMTP_USERNAME = 'Shelest.ckcco@gmail.com', // SMTP-пользователь
-    MAIL_SMTP_PASSWORD = 'Ljr72vip'; // SMTP-пароль
+    MAIL_SMTP_USERNAME = 'mail@gmail.com', // SMTP-пользователь
+    MAIL_SMTP_PASSWORD = 'password'; // SMTP-пароль
 
 // Переменные, которые отправляет пользователь
 $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
