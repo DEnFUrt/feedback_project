@@ -25,12 +25,12 @@ const
     MAX_FILE_SIZE = 2097152, // максимальный размер файла (в байтах)
     MAX_FILE_COUNT = 5, //максимальное количество файлов
     ALLOWED_EXTENSIONS = array('jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'rtf'), // разрешённые расширения файлов
-    MAIL_FROM = 'Shelest.ckcco@gmail.com', // от какого email будет отправляться письмо
-    MAIL_FROM_NAME = 'Cайт СК ССО Шелест', // от какого имени будет отправляться письмо
-    MAIL_FROM_SITE = 'ск-шелест72.рф',
-    MAIL_FROM_HOST = 'http://ск-шелест72.рф',
+    MAIL_FROM = '...@gmail.com', // от какого email будет отправляться письмо
+    MAIL_FROM_NAME = 'UserName, // от какого имени будет отправляться письмо
+    MAIL_FROM_SITE = 'siteName',
+    MAIL_FROM_HOST = 'adress site',
     MAIL_SUBJECT = 'Сообщение с формы обратной связи', // тема письма
-    MAIL_ADDRESS =  array('musorov@gmail.com'), // кому необходимо отправить письмо, адреса необходимо перечислять через запятую
+    MAIL_ADDRESS =  array('username@gmail.com'), // кому необходимо отправить письмо, адреса необходимо перечислять через запятую
     MAIL_SMTP_HOST = 'ssl://smtp.gmail.com', // SMTP-хост
     MAIL_SMTP_PORT = '465', // SMTP-порт
     MAIL_SMTP_USERNAME = 'mail@gmail.com', // SMTP-пользователь
