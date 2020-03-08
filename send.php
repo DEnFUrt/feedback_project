@@ -26,7 +26,7 @@ const
     MAX_FILE_COUNT = 5, //максимальное количество файлов
     ALLOWED_EXTENSIONS = array('jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'txt', 'rtf'), // разрешённые расширения файлов
     MAIL_FROM = '...@gmail.com', // от какого email будет отправляться письмо
-    MAIL_FROM_NAME = 'UserName, // от какого имени будет отправляться письмо
+    MAIL_FROM_NAME = 'UserName', // от какого имени будет отправляться письмо
     MAIL_FROM_SITE = 'siteName',
     MAIL_FROM_HOST = 'adress site',
     MAIL_SUBJECT = 'Сообщение с формы обратной связи', // тема письма
